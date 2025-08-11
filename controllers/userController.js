@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const {hash} = require("bcrypt");
+const {hash, compare} = require("bcrypt");
 const {sign} = require("jsonwebtoken");
 
 const userController = {
@@ -30,6 +30,34 @@ const userController = {
         } catch (error) {
             console.log(error);
             response.status(500).send("Ocurrio un problema al registar al usuario");
+        }
+    },
+    login: function (request, response) {
+        const {email, password} = request.body;
+        try {
+            User.findOne({
+                email: email,
+            }, null, {
+                new: true,
+            }).then(user => {
+                if (user) {
+                    compare(password, user.password).then(match => {
+                        if (match) {
+                            response.status(200).json({
+                                accessToken: userController.generateToken(user._id),
+                                refreshToken: userController.generateToken(user.email, "1d"),
+                            });
+                        } else {
+                            response.status(401).send("Las credenciales no son correctas");
+                        }
+                    });
+                } else {
+                    response.status(404).send("el usuario no se encuentra registrado");
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            response.status(500).send("Ocurrio un problema al iniciar sesion");
         }
     }
 };

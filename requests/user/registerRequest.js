@@ -1,6 +1,5 @@
 const {body} = require("express-validator");
-const User = require("../../models/user")
-const checkValidation = require("../../middleware/checkValidation");
+const User = require("../../models/user");
 const registerRequest = [
     body("name")
         .trim()
@@ -42,7 +41,6 @@ const registerRequest = [
             }
             return true;
         }),
-    checkValidation,
 ];
 
 module.exports = registerRequest;
