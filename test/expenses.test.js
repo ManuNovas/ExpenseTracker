@@ -49,5 +49,55 @@ describe("Integration test for expenses", () => {
                 expect(response.body).to.have.property("category");
                 done();
             });
-    })
+    });
+    it("Should read all expenses", (done) => {
+        chai.request(app)
+            .get("/expenses")
+            .set("Authorization", "Bearer " + accessToken)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.be.an("array");
+                done();
+            });
+    });
+    it("Should read past week expenses", (done) => {
+        chai.request(app)
+            .get("/expenses?range=1")
+            .set("Authorization", "Bearer " + accessToken)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.be.an("array");
+                done();
+            });
+    });
+    it("Should read past month expenses", (done) => {
+        chai.request(app)
+            .get("/expenses?range=2")
+            .set("Authorization", "Bearer " + accessToken)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.be.an("array");
+                done();
+            });
+    });
+    it("Should read last three months expenses", (done) => {
+        chai.request(app)
+            .get("/expenses?range=3")
+            .set("Authorization", "Bearer " + accessToken)
+                .end((error, response) => {
+                    expect(response).to.have.status(200);
+                    expect(response.body).to.be.an("array");
+                    done();
+                });
+    });
+    it("Should read custom expenses", (done) => {
+        chai.request(app)
+            .get("/expenses?range=4&startDate=2025-08-01&endDate=2025-08-12")
+            .set("Authorization", "Bearer " + accessToken)
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.be.an("array");
+                done();
+            });
+    });
 })
