@@ -5,7 +5,11 @@ const categorySchema = new Schema({
         required: true,
         maxLength: 64,
         unique: true,
-    }
+    },
+    expenses: [{
+        type: Schema.Types.ObjectId,
+        ref: "Expense",
+    }],
 }, {
     timestamps: true,
     toJSON: {

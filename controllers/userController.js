@@ -62,7 +62,7 @@ const userController = {
     },
     refreshToken: function (request, response) {
         const {refreshToken} = request.body;
-        let payload, user;
+        let payload;
         try {
             payload = verify(refreshToken, process.env.JWT_SECRET);
             User.findOne({
