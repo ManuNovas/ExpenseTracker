@@ -119,5 +119,14 @@ describe("Integration test for expenses", () => {
                 expect(response.body).to.have.property("category");
                 done();
             });
-    })
+    });
+    it("Should delete an expense", (done) => {
+        chai.request(app)
+            .delete("/expenses/" + id)
+            .set("Authorization", "Bearer " + accessToken)
+            .end((error, response) => {
+                expect(response).to.have.status(204);
+                done();
+            });
+    });
 })

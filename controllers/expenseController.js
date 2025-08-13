@@ -101,6 +101,27 @@ const expenseController = {
             response.status(500).send("Ocurrio un problema al actualizar el gasto");
         }
     },
+    delete: function(request, response){
+        const user = request.user;
+        const {id} = request.params;
+        try{
+            Expense.findByIdAndDelete({
+                _id: id,
+                user: user._id,
+            }, {
+                new: true,
+            }).then(expense => {
+                if(expense){
+                    response.status(204).send("El gasto se elimino correctamente");
+                }else{
+                    response.status(404).send("El gasto no se encuentra registrado");
+                }
+            });
+        }catch(error){
+            console.log(error);
+            response.status(500).send("Ocurrio un problema al eliminar el gasto");
+        }
+    }
 };
 
 module.exports = expenseController;
