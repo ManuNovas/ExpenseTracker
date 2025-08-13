@@ -10,7 +10,7 @@ const User = require("../models/user");
 const Expense = require("../models/expense");
 const Category = require("../models/category");
 const userController = require("../controllers/userController");
-let expect, user, accessToken, category;
+let expect, user, accessToken, category, id;
 
 chai.use(chaiHttp);
 expect = chai.expect;
@@ -42,6 +42,7 @@ describe("Integration test for expenses", () => {
                 date: "2025-08-11",
             })
             .end((error, response) => {
+                id = response.body.id;
                 expect(response).to.have.status(201);
                 expect(response.body).to.have.property("amount");
                 expect(response.body).to.have.property("description");
@@ -100,4 +101,23 @@ describe("Integration test for expenses", () => {
                 done();
             });
     });
+    it("Should update an expense", (done) => {
+        chai.request(app)
+            .put("/expenses/" + id)
+            .set("Authorization", "Bearer " + accessToken)
+            .send({
+                category_id: category._id,
+                amount: 256,
+                description: "Test expense updated",
+                date: "2025-08-10",
+            })
+            .end((error, response) => {
+                expect(response).to.have.status(200);
+                expect(response.body).to.have.property("amount");
+                expect(response.body).to.have.property("description");
+                expect(response.body).to.have.property("date");
+                expect(response.body).to.have.property("category");
+                done();
+            });
+    })
 })

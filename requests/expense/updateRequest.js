@@ -1,19 +1,19 @@
-const {body} = require("express-validator");
-const Category = require("../../models/category");
-const createRequest = [
-    body("category_id")
-        .notEmpty().withMessage("La categoria es obligatoria")
-        .custom(async (category_id) => {
-            const category = Category.findById(category_id, null, {
+const {param, body} = require('express-validator');
+const Expense = require('../../models/expense');
+const updateRequest = [
+    param("id")
+        .notEmpty().withMessage("El ID es requerido")
+        .custom(async (id) => {
+            const expense = Expense.findById(id, null, {
                 new: true,
             });
-            if (!category) {
-                throw new Error("La categoria no existe");
+            if(!expense){
+                throw new Error("El gasto no existe");
             }
             return true;
         }),
     body("amount")
-        .notEmpty().withMessage("El monto es obligatorio")
+        .notEmpty().withMessage("El monto es requerido")
         .isNumeric().withMessage("El monto debe ser un numero"),
     body("description")
         .trim()
@@ -26,4 +26,4 @@ const createRequest = [
         .isDate().withMessage("La fecha debe tener un formato válido"),
 ];
 
-module.exports = createRequest;
+module.exports = updateRequest;

@@ -29,7 +29,10 @@ const expenseSchema = new Schema({
         transform: (document, returnedObject) => {
             return {
                 id: returnedObject._id,
-                category: returnedObject.category,
+                category: {
+                    id: returnedObject.category._id ?? returnedObject.category.id,
+                    name: returnedObject.category.name,
+                },
                 amount: returnedObject.amount,
                 description: returnedObject.description,
                 date: returnedObject.date,
